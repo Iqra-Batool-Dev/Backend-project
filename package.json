@@ -3,13 +3,18 @@
   "version": "1.0.0",
   "description": "A backend project using javaScript",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "nodemon src/index.js"
   },
   "keywords": [
     "backend",
     "javaScript"
   ],
   "author": "Iqra Batool",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "prettier": "^3.4.2"
+    
+  }
 }
