@@ -1,8 +1,8 @@
-import { User } from "../models/user.model";
-import { ApiError } from "../utils/apiErrors";
-import { asyncHandler } from "../utils/asyncHandler";
+import { User } from "../models/user.model.js";
+import { ApiError } from "../utils/apiErrors.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
-export const verifyJWT= asyncHandler(async(req, _, next)=>{
+export const verifyJWT= asyncHandler(async(req, _, next)=>{ // we can also write _ instead of res where res is not
     try {
         const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "")
     
@@ -24,3 +24,4 @@ export const verifyJWT= asyncHandler(async(req, _, next)=>{
         throw new ApiError(401, error?.message || "Invalid access Token" )
     }
 })
+

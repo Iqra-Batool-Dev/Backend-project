@@ -93,9 +93,10 @@ const registerUser = asyncHandler( async (req , res)=>{
 
 const loginUser = asyncHandler(async(req, res)=>{
     // get user data 
-        const {username, email, password}= req.body
+        const {username, email, password} = req.body
+        
     // check if username, email , password is empty
-        if(!username || !email){
+        if(!(username || email)){
             throw new ApiError(400, "username or email is required")
         }
     // find user
