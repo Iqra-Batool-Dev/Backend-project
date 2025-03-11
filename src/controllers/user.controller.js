@@ -10,10 +10,11 @@ const generateAccessAndRefreshToken = async (userId) =>{
         const user = await User.findById(userId)
         const accessToken =  user.generateAccessToken()
         const refreshToken =  user.generateRefreshToken()
+        user.accessToken = refreshToken
         user.refreshToken = refreshToken
 
         await user.save({validateBeforeSave: false})
-        return (accessToken, refreshToken)
+        return ({accessToken, refreshToken})
     }
     catch{
         throw new ApiError(500, "something went wrong while generating access and refresh token")
@@ -115,9 +116,10 @@ const loginUser = asyncHandler(async(req , res)=>{
         }
 
     // access and refresh token 
-        const {accessToken, refreshToken} = await generateAccessAndRefreshToken(user._id)
-        console.log("this is access token",accessToken)
-        const  loggedInUser = await User.findOne(user._id).select(" -password ")
+        const {accessToken , refreshToken} = await generateAccessAndRefreshToken(user._id)
+        
+        // console.log("token obj: ",tokens)
+        const  loggedInUser = await User.findOne(user._id).select(" -password -refreshToken")
     // send cookie
         const options= {
             httpOnly: true,
