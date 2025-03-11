@@ -4,14 +4,15 @@ import {User} from "../models/user.model.js";
 import {uploadOnCloudinary} from "../utils/cloudinary.js"
 import {ApiResponse} from "../utils/apiResponse.js"
 
+
 const generateAccessAndRefreshToken = async (userId) =>{
     try{
-        const user = await User.findOne(userId)
-        const accessToken = user.generateAccessToken()
-        const refreshToken = user.generateRefreshToken()
+        const user = await User.findById(userId)
+        const accessToken =  user.generateAccessToken()
+        const refreshToken =  user.generateRefreshToken()
         user.refreshToken = refreshToken
-        await user.save({validateBeforeSave: false})
 
+        await user.save({validateBeforeSave: false})
         return (accessToken, refreshToken)
     }
     catch{
@@ -91,7 +92,8 @@ const registerUser = asyncHandler( async (req , res)=>{
 })
 
 
-const loginUser = asyncHandler(async(req, res)=>{
+const loginUser = asyncHandler(async(req , res)=>{
+    console.log(req.body) 
     // get user data 
         const {username, email, password} = req.body
         
@@ -111,10 +113,11 @@ const loginUser = asyncHandler(async(req, res)=>{
         if(!isPasswordValid){
             throw new ApiError(401, "invalid password")
         }
-    // access and refresh token 
-        const {accessToken, refreshToken}= await generateAccessAndRefreshToken(user._id)
 
-        const  loggedInUser = await User.findOne(user._id).select(" -password -refreshToken")
+    // access and refresh token 
+        const {accessToken, refreshToken} = await generateAccessAndRefreshToken(user._id)
+        console.log("this is access token",accessToken)
+        const  loggedInUser = await User.findOne(user._id).select(" -password ")
     // send cookie
         const options= {
             httpOnly: true,
@@ -133,7 +136,7 @@ const loginUser = asyncHandler(async(req, res)=>{
                 "user loggedIn successfully"
             )
         )
-
+        
 })
 
 
